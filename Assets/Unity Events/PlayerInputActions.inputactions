@@ -1,0 +1,34 @@
+{
+    "name": "PlayerInputActions_UnityEvents",
+    "maps": [
+        {
+            "name": "Player",
+            "id": "53558bcc-2337-4f78-a32e-4ee4a64807a2",
+            "actions": [
+                {
+                    "name": "Jump",
+                    "type": "Button",
+                    "id": "568bbf62-3b87-4ee1-bbf1-961b95b381c2",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "f5e766ff-3a88-4b4a-bca5-a7588fd0aacf",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Jump",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}

@@ -1,0 +1,7 @@
+Project to Learn and experiment with Unity's new input System
+
+4 Workflows: https://docs.unity3d.com/Packages/com.unity.inputsystem@1.11/manual/Workflows.html
+
+
+
+https://www.youtube.com/watch?v=Yjee_e4fICc&t=130s
