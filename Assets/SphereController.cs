@@ -2,51 +2,40 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class SphereController : MonoBehaviour
 {
-    public float moveSpeed = 2.5f;
-    public float jumpForce = 5.0f;
 
-    private Rigidbody sphereRigidbdody;    
+    [SerializeField] private float moveSpeed = 2.5f;
+    [SerializeField] private float jumpForce = 5.0f;
+    
+    private Rigidbody sphereRigidbdody;
+
+
 
     private void Awake()
     {
-        sphereRigidbdody = GetComponent<Rigidbody>();
+        sphereRigidbdody = GetComponent<Rigidbody>();        
     }
 
-    private void Update()
+    private void Start()
     {
-        HandleJump();
-    }
-
-
-    private void FixedUpdate()
-    {
-        HandleMovement();
+        // inputManager.MoveEvent += HandleMove;
+        InputManager.instance.JumpEvent += HandleJump;
     }
 
     private void HandleJump()
     {
-        if (InputManager.instance.jumpInput) 
-        {        
-            Debug.Log("jump");
-            sphereRigidbdody.AddForce(Vector3.up * 5f, ForceMode.Impulse);
-
-            // have to set the jumpInput to false or it reads the input multiple times, I dont like forceing the bool back from here.
-            // should be an event that calls jump instead of a bool
-            InputManager.instance.jumpInput = false;
-        }
-        
-        
+        Debug.Log("Jump Triggered within Sphere Controller with a force of :" + jumpForce);
+        sphereRigidbdody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);        
     }
 
 
-    private void HandleMovement()
+    private void HandleMove(Vector2 moveInput)
     {
-        
+        sphereRigidbdody.AddForce(new Vector3(moveInput.x, 0, moveInput.y) * moveSpeed, ForceMode.Force);
 
-        //sphereRigidbdody.AddForce(new Vector3(InputManager.instance.moveInput.x, 0, InputManager.instance.moveInput.y) * moveSpeed, ForceMode.Force);
     }
 
 }

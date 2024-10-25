@@ -1,10 +1,11 @@
 
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-
-public class InputManager : MonoBehaviour
+public class InputManager : MonoBehaviour, GameInput.IGameplayActions
 {
+   
     #region Static instance
     // Public static property to access the singleton instance of GameStateManager
     public static InputManager instance
@@ -26,77 +27,68 @@ public class InputManager : MonoBehaviour
     // Private static variable to hold the singleton instance of GameStateManager
     private static InputManager _instance;
     #endregion
+ 
 
-
-    //private PlayerInput playerInput;
-    private PlayerInputActions playerInputActions;
-
-    public Vector2 moveInput { get; private set; }
-    public bool jumpInput = false;   // should be an event that calls jump instead of a bool
-
+    private GameInput gameInput;
 
     private void Awake()
     {
+        // Initialize the GameInput instance
+        gameInput = new GameInput();
+
+        // Register this class to receive input callbacks
+        gameInput.Gameplay.SetCallbacks(this);
+
+        
         #region Singleton Pattern
         // If there is an instance, and it's not me, delete myself.
         if (_instance != null)
         {
-            Destroy(gameObject);
-            return;
-        }
+        Destroy(gameObject);
+        return;
+         }
         _instance = this;
         DontDestroyOnLoad(gameObject);
         #endregion
-
-
-
-        // Initialize the input actions
-        playerInputActions = new PlayerInputActions();
+        
     }
 
     private void OnEnable()
     {
-        playerInputActions.Enable();
-
-        // Hook up action callbacks manually
-        playerInputActions.Player.Movement.performed += MovePerformed;
-        playerInputActions.Player.Movement.canceled += MoveCanceled;
-
-        playerInputActions.Player.Jump.started += JumpStarted;
-
+        // Enable the input system
+        gameInput.Gameplay.Enable();
     }
 
     private void OnDisable()
     {
-        playerInputActions.Disable();
-
-        // Hook up action callbacks manually
-        playerInputActions.Player.Movement.performed -= MovePerformed;
-        playerInputActions.Player.Movement.canceled -= MoveCanceled;
-
-        playerInputActions.Player.Jump.started -= JumpStarted;
-
+        // Disable the input system when the object is disabled
+        gameInput.Gameplay.Disable();
     }
 
-    private void MovePerformed(InputAction.CallbackContext context)
+
+
+    //public event Action<Vector2> MoveEvent;
+
+    public event Action JumpEvent;
+   // public event Action JumpCancelledEvent;
+
+    //public event Action PauseEvent;
+    //public event Action ResumeEvent;
+
+
+
+    public void OnJump(InputAction.CallbackContext context)
     {
-        // Read move input when performed
-        moveInput = context.ReadValue<Vector2>();
+        if (context.performed)
+        {
+            Debug.Log("jump performed");
+            JumpEvent?.Invoke();
+        }
+        
     }
 
-    private void MoveCanceled(InputAction.CallbackContext context)
+    public void OnMovement(InputAction.CallbackContext context)
     {
-        // Read move input when performed
-        moveInput = Vector2.zero;
+        //Debug.Log($"Phase: {context.phase}, Value: {context.ReadValue<Vector2>()}");
     }
-
-    private void JumpStarted(InputAction.CallbackContext context)
-    {
-        // Only set jumpInput to true once per press
-        jumpInput = true;
-    }
-
-
-
-
 }
