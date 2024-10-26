@@ -1,6 +1,7 @@
 
 using System;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
 public class InputManager : MonoBehaviour, GameInput.IGameplayActions
@@ -29,7 +30,9 @@ public class InputManager : MonoBehaviour, GameInput.IGameplayActions
     #endregion
  
 
-    private GameInput gameInput;
+    public GameInput gameInput;
+
+
 
     private void Awake()
     {
@@ -38,8 +41,7 @@ public class InputManager : MonoBehaviour, GameInput.IGameplayActions
 
         // Register this class to receive input callbacks
         gameInput.Gameplay.SetCallbacks(this);
-
-        
+                
         #region Singleton Pattern
         // If there is an instance, and it's not me, delete myself.
         if (_instance != null)
@@ -49,8 +51,7 @@ public class InputManager : MonoBehaviour, GameInput.IGameplayActions
          }
         _instance = this;
         DontDestroyOnLoad(gameObject);
-        #endregion
-        
+        #endregion        
     }
 
     private void OnEnable()
@@ -65,15 +66,18 @@ public class InputManager : MonoBehaviour, GameInput.IGameplayActions
         gameInput.Gameplay.Disable();
     }
 
-
-
-    //public event Action<Vector2> MoveEvent;
+    #region Input Events
 
     public event Action JumpEvent;
-   // public event Action JumpCancelledEvent;
+    public event Action<Vector2> MoveEvent;
 
-    //public event Action PauseEvent;
-    //public event Action ResumeEvent;
+   
+    
+
+    #endregion
+
+
+
 
 
 
@@ -83,12 +87,12 @@ public class InputManager : MonoBehaviour, GameInput.IGameplayActions
         {
             Debug.Log("jump performed");
             JumpEvent?.Invoke();
-        }
-        
+        }        
     }
 
     public void OnMovement(InputAction.CallbackContext context)
-    {
-        //Debug.Log($"Phase: {context.phase}, Value: {context.ReadValue<Vector2>()}");
+    {      
+            MoveEvent?.Invoke(context.ReadValue<Vector2>());
+            Debug.Log("movement performed");      
     }
 }

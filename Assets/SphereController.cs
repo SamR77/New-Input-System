@@ -7,35 +7,55 @@ using UnityEngine.InputSystem;
 public class SphereController : MonoBehaviour
 {
 
-    [SerializeField] private float moveSpeed = 2.5f;
+    [SerializeField] private float moveSpeed = 5.0f;
     [SerializeField] private float jumpForce = 5.0f;
-    
+
+
     private Rigidbody sphereRigidbdody;
 
-
+    private Vector2 moveDirection;
 
     private void Awake()
     {
-        sphereRigidbdody = GetComponent<Rigidbody>();        
+        sphereRigidbdody = GetComponent<Rigidbody>();
     }
 
     private void Start()
-    {
-        // inputManager.MoveEvent += HandleMove;
+    {        
         InputManager.instance.JumpEvent += HandleJump;
+        InputManager.instance.MoveEvent += HandleMove;
+        
+        // example of how to enable and disable input..
+        // useful for disabling certain inputs in the Enter/Exit methods of a state machine
+        
+        // InputManager.instance.gameInput.Gameplay.Jump.Enable();
+        // InputManager.instance.gameInput.Gameplay.Jump.Disable();
     }
+
+    void FixedUpdate()
+    {
+        Move();
+    }
+
+    private void Move()
+    {
+        if(moveDirection == Vector2.zero)
+        {
+            return;
+        }
+        sphereRigidbdody.AddForce(new Vector3(moveDirection.x, 0, moveDirection.y) * moveSpeed, ForceMode.Force);
+    }
+
+    private void HandleMove(Vector2 moveInput)
+    {
+        moveDirection = moveInput;        
+    }
+
+
 
     private void HandleJump()
     {
         Debug.Log("Jump Triggered within Sphere Controller with a force of :" + jumpForce);
-        sphereRigidbdody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);        
+        sphereRigidbdody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
     }
-
-
-    private void HandleMove(Vector2 moveInput)
-    {
-        sphereRigidbdody.AddForce(new Vector3(moveInput.x, 0, moveInput.y) * moveSpeed, ForceMode.Force);
-
-    }
-
 }
