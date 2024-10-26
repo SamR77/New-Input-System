@@ -33,7 +33,6 @@ public class InputManager : MonoBehaviour, GameInput.IGameplayActions
     public GameInput gameInput;
 
 
-
     private void Awake()
     {
         // Initialize the GameInput instance
@@ -70,14 +69,8 @@ public class InputManager : MonoBehaviour, GameInput.IGameplayActions
 
     public event Action JumpEvent;
     public event Action<Vector2> MoveEvent;
-
-   
-    
-
+      
     #endregion
-
-
-
 
 
 

@@ -46,12 +46,10 @@ public class SphereController : MonoBehaviour
         sphereRigidbdody.AddForce(new Vector3(moveDirection.x, 0, moveDirection.y) * moveSpeed, ForceMode.Force);
     }
 
-    private void HandleMove(Vector2 moveInput)
+    private void HandleMove(Vector2 moveInput)  // might want to rename this method to something like HandleMoveInput or something related to just passing storing the input values.
     {
         moveDirection = moveInput;        
     }
-
-
 
     private void HandleJump()
     {
